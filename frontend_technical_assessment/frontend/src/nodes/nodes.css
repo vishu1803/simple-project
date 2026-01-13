@@ -1,0 +1,287 @@
+/* nodes.css - Shared styles for React Flow nodes */
+
+/* ========================================
+   CSS Custom Properties (Theme Variables)
+   ======================================== */
+:root {
+  /* Node colors */
+  --node-input-color: #10b981;
+  --node-output-color: #f59e0b;
+  --node-llm-color: #8b5cf6;
+  --node-text-color: #3b82f6;
+  --node-filter-color: #06b6d4;
+  --node-transform-color: #ec4899;
+  --node-conditional-color: #f59e0b;
+  --node-api-color: #ef4444;
+  --node-merge-color: #6366f1;
+
+  /* Base colors */
+  --node-bg: #1e1e2e;
+  --node-bg-secondary: #2a2a3e;
+  --node-border: rgba(255, 255, 255, 0.1);
+  --node-text: #ffffff;
+  --node-text-muted: #a1a1aa;
+  --node-shadow: rgba(0, 0, 0, 0.3);
+
+  /* Handle colors */
+  --handle-bg: #ffffff;
+  --handle-border: #374151;
+  --handle-hover: #60a5fa;
+}
+
+/* ========================================
+   Base Node Container
+   ======================================== */
+.base-node {
+  min-width: 220px;
+  background: var(--node-bg);
+  border-radius: 12px;
+  border: 1px solid var(--node-border);
+  box-shadow: 
+    0 4px 6px -1px var(--node-shadow),
+    0 2px 4px -2px var(--node-shadow);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.base-node:hover {
+  box-shadow: 
+    0 10px 15px -3px var(--node-shadow),
+    0 4px 6px -4px var(--node-shadow);
+  transform: translateY(-1px);
+}
+
+.base-node.selected {
+  border-color: var(--handle-hover);
+  box-shadow: 
+    0 0 0 2px var(--handle-hover),
+    0 10px 15px -3px var(--node-shadow);
+}
+
+/* ========================================
+   Node Header
+   ======================================== */
+.base-node__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--header-color) 0%, color-mix(in srgb, var(--header-color) 80%, black) 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.base-node__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.base-node__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--node-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ========================================
+   Node Body
+   ======================================== */
+.base-node__body {
+  padding: 14px;
+  background: var(--node-bg-secondary);
+}
+
+.base-node__field {
+  margin-bottom: 10px;
+}
+
+.base-node__field:last-child {
+  margin-bottom: 0;
+}
+
+.base-node__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--node-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.base-node__input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-radius: 6px;
+  color: var(--node-text);
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.base-node__input:focus {
+  outline: none;
+  border-color: var(--handle-hover);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.base-node__input::placeholder {
+  color: var(--node-text-muted);
+}
+
+.base-node__select {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-radius: 6px;
+  color: var(--node-text);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.base-node__select:focus {
+  outline: none;
+  border-color: var(--handle-hover);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.base-node__select option {
+  background: var(--node-bg);
+  color: var(--node-text);
+}
+
+.base-node__textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 12px;
+  background: var(--node-bg);
+  border: 1px solid var(--node-border);
+  border-radius: 6px;
+  color: var(--node-text);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.base-node__textarea:focus {
+  outline: none;
+  border-color: var(--handle-hover);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.base-node__description {
+  font-size: 12px;
+  color: var(--node-text-muted);
+  line-height: 1.4;
+}
+
+/* ========================================
+   Custom Handle Styles
+   ======================================== */
+.base-node .react-flow__handle {
+  width: 12px;
+  height: 12px;
+  background: var(--handle-bg);
+  border: 2px solid var(--handle-border);
+  transition: all 0.15s ease;
+}
+
+.base-node .react-flow__handle:hover {
+  background: var(--handle-hover);
+  border-color: var(--handle-hover);
+  transform: scale(1.2);
+}
+
+.base-node .react-flow__handle-left {
+  left: -6px;
+}
+
+.base-node .react-flow__handle-right {
+  right: -6px;
+}
+
+/* Handle labels */
+.handle-label {
+  position: absolute;
+  font-size: 9px;
+  color: var(--node-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.handle-label--left {
+  left: 8px;
+  transform: translateY(-50%);
+}
+
+.handle-label--right {
+  right: 8px;
+  transform: translateY(-50%);
+}
+
+/* ========================================
+   Node Type Specific Colors
+   ======================================== */
+.base-node--input { --header-color: var(--node-input-color); }
+.base-node--output { --header-color: var(--node-output-color); }
+.base-node--llm { --header-color: var(--node-llm-color); }
+.base-node--text { --header-color: var(--node-text-color); }
+.base-node--filter { --header-color: var(--node-filter-color); }
+.base-node--transform { --header-color: var(--node-transform-color); }
+.base-node--conditional { --header-color: var(--node-conditional-color); }
+.base-node--api { --header-color: var(--node-api-color); }
+.base-node--merge { --header-color: var(--node-merge-color); }
+
+/* ========================================
+   Row Layout for Multiple Fields
+   ======================================== */
+.base-node__row {
+  display: flex;
+  gap: 10px;
+}
+
+.base-node__row .base-node__field {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes nodeEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.base-node {
+  animation: nodeEnter 0.2s ease-out;
+}
