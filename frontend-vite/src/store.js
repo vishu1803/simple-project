@@ -6,7 +6,7 @@ import {
     applyNodeChanges,
     applyEdgeChanges,
     MarkerType,
-  } from 'reactflow';
+  } from '@xyflow/react';
 
 export const useStore = create((set, get) => ({
     nodes: [],

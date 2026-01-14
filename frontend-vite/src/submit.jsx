@@ -1,7 +1,5 @@
-// submit.js
-
 import { useStore } from './store';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 
 const selector = (state) => ({
     nodes: state.nodes,
@@ -9,10 +7,9 @@ const selector = (state) => ({
 });
 
 export const SubmitButton = () => {
-    const { nodes, edges } = useStore(selector, shallow);
+    const { nodes, edges } = useStore(useShallow(selector));
 
     const handleSubmit = async () => {
-        // Prepare pipeline data
         const pipelineData = {
             nodes: nodes.map((node) => ({
                 id: node.id,
@@ -30,7 +27,6 @@ export const SubmitButton = () => {
 
         console.log('Pipeline Data:', pipelineData);
 
-        // Show success feedback
         alert(
             `Pipeline submitted!\n\nNodes: ${nodes.length}\nConnections: ${edges.length}`
         );

@@ -2,10 +2,10 @@
 // Displays the drag-and-drop UI
 // --------------------------------------------------
 
-import { useState, useRef, useCallback } from 'react';
-import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
+import { useState, useRef, useCallback, useMemo } from 'react';
+import { ReactFlow, Controls, Background, MiniMap } from "@xyflow/react";
 import { useStore } from './store';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
@@ -16,7 +16,7 @@ import { ConditionalNode } from './nodes/ConditionalNode';
 import { APINode } from './nodes/APINode';
 import { MergeNode } from './nodes/MergeNode';
 
-import 'reactflow/dist/style.css';
+import "@xyflow/react/dist/style.css";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
@@ -71,7 +71,7 @@ export const PipelineUI = () => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-  } = useStore(selector, shallow);
+  } = useStore(useShallow(selector));
 
   const getInitNodeData = (nodeID, type) => {
     let nodeData = { id: nodeID, nodeType: `${type}` };
@@ -94,7 +94,7 @@ export const PipelineUI = () => {
           return;
         }
 
-        const position = reactFlowInstance.project({
+        const position = reactFlowInstance.screenToFlowPosition({
           x: event.clientX - reactFlowBounds.left,
           y: event.clientY - reactFlowBounds.top,
         });
@@ -117,12 +117,14 @@ export const PipelineUI = () => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
+  const memoNodes = useMemo(() => nodes, [nodes]);
+  const memoEdges = useMemo(() => edges, [edges]);
 
   return (
     <div ref={reactFlowWrapper} className="canvas-wrapper">
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
+        nodes={memoNodes}
+        edges={memoEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}

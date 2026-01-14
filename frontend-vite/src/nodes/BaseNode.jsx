@@ -1,6 +1,6 @@
 // BaseNode.js - Reusable base component for all React Flow nodes
 
-import { Handle, Position } from 'reactflow';
+import { Handle, Position } from "@xyflow/react";
 import './nodes.css';
 
 /**
