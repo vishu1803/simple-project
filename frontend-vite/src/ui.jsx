@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { ReactFlow, Controls, Background, MiniMap } from "@xyflow/react";
+import { ReactFlow, Controls, Background, MiniMap, Panel } from "@xyflow/react";
 import { useStore } from './store';
 import { useShallow } from 'zustand/react/shallow';
 import { InputNode } from './nodes/inputNode';
@@ -15,6 +15,7 @@ import { TransformNode } from './nodes/TransformNode';
 import { ConditionalNode } from './nodes/ConditionalNode';
 import { APINode } from './nodes/APINode';
 import { MergeNode } from './nodes/MergeNode';
+import { CustomEdge } from './CustomEdge';
 
 import "@xyflow/react/dist/style.css";
 
@@ -34,14 +35,21 @@ const nodeTypes = {
   merge: MergeNode,
 };
 
+// Register custom edge types
+const edgeTypes = {
+  custom: CustomEdge,
+};
+
 const selector = (state) => ({
   nodes: state.nodes,
   edges: state.edges,
   getNodeID: state.getNodeID,
   addNode: state.addNode,
+  deleteNode: state.deleteNode,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  clearAll: state.clearAll,
 });
 
 // Custom minimap node colors
@@ -68,9 +76,11 @@ export const PipelineUI = () => {
     edges,
     getNodeID,
     addNode,
+    deleteNode,
     onNodesChange,
     onEdgesChange,
     onConnect,
+    clearAll,
   } = useStore(useShallow(selector));
 
   const getInitNodeData = (nodeID, type) => {
@@ -117,11 +127,20 @@ export const PipelineUI = () => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
+
+  // Handle keyboard delete
+  const onKeyDown = useCallback((event) => {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      const selectedNodes = nodes.filter(n => n.selected);
+      selectedNodes.forEach(node => deleteNode(node.id));
+    }
+  }, [nodes, deleteNode]);
+
   const memoNodes = useMemo(() => nodes, [nodes]);
   const memoEdges = useMemo(() => edges, [edges]);
 
   return (
-    <div ref={reactFlowWrapper} className="canvas-wrapper">
+    <div ref={reactFlowWrapper} className="canvas-wrapper" onKeyDown={onKeyDown} tabIndex={0}>
       <ReactFlow
         nodes={memoNodes}
         edges={memoEdges}
@@ -132,14 +151,17 @@ export const PipelineUI = () => {
         onDragOver={onDragOver}
         onInit={setReactFlowInstance}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         proOptions={proOptions}
         snapGrid={[gridSize, gridSize]}
         snapToGrid
         connectionLineType="smoothstep"
+        connectionLineStyle={{ stroke: '#0ea5e9', strokeWidth: 2 }}
         fitView
         fitViewOptions={{ padding: 0.2 }}
+        deleteKeyCode={['Delete', 'Backspace']}
         defaultEdgeOptions={{
-          type: 'smoothstep',
+          type: 'custom',
           animated: true,
         }}
       >
@@ -156,6 +178,19 @@ export const PipelineUI = () => {
           zoomable
           pannable
         />
+
+        {/* Clear All Panel */}
+        {(nodes.length > 0 || edges.length > 0) && (
+          <Panel position="top-right" className="canvas-panel">
+            <button
+              className="clear-button"
+              onClick={clearAll}
+              title="Clear all nodes and connections"
+            >
+              🗑️ Clear All
+            </button>
+          </Panel>
+        )}
       </ReactFlow>
     </div>
   );

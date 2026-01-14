@@ -1,6 +1,6 @@
 // textNode.js
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { BaseNode } from './BaseNode';
 import { useStore } from '../store';
 
@@ -9,6 +9,16 @@ export const TextNode = ({ id, data, selected }) => {
   const [dynamicOutputs, setDynamicOutputs] = useState([]);
   const updateNodeField = useStore((state) => state.updateNodeField);
   const textareaRef = useRef(null);
+
+  // Auto-resize textarea function
+  const resizeTextarea = useCallback(() => {
+    if (textareaRef.current) {
+      // Reset height to auto to get the correct scrollHeight
+      textareaRef.current.style.height = 'auto';
+      // Set height to scrollHeight to fit content
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, []);
 
   // Extract variables from text (e.g., {{variable}})
   useEffect(() => {
@@ -25,15 +35,20 @@ export const TextNode = ({ id, data, selected }) => {
     setDynamicOutputs(newOutputs);
   }, [currText]);
 
+  // Auto-resize textarea on mount and when content changes
+  useEffect(() => {
+    resizeTextarea();
+  }, [currText, resizeTextarea]);
+
+  // Also resize on window resize
+  useEffect(() => {
+    window.addEventListener('resize', resizeTextarea);
+    return () => window.removeEventListener('resize', resizeTextarea);
+  }, [resizeTextarea]);
+
   const handleTextChange = (e) => {
     setCurrText(e.target.value);
     updateNodeField(id, 'text', e.target.value);
-
-    // Auto-resize textarea
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
   };
 
   return (

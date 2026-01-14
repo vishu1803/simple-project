@@ -289,24 +289,106 @@ code {
 
 /* Edge Styles */
 .react-flow__edge-path {
-  stroke: var(--primary-500) !important;
+  stroke: #0ea5e9 !important;
   stroke-width: 2 !important;
+  filter: drop-shadow(0 0 4px rgba(14, 165, 233, 0.4));
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: var(--primary-400) !important;
+  stroke: #60a5fa !important;
   stroke-width: 3 !important;
+  filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.6));
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #38bdf8 !important;
+  stroke-width: 2.5 !important;
 }
 
 .react-flow__edge.animated path {
-  stroke-dasharray: 5 !important;
-  animation: dashdraw 0.5s linear infinite !important;
+  stroke-dasharray: 8, 4 !important;
+  animation: dashdraw 0.6s linear infinite !important;
 }
 
 @keyframes dashdraw {
   to {
-    stroke-dashoffset: -10;
+    stroke-dashoffset: -12;
   }
+}
+
+/* Connection Line (while dragging) */
+.react-flow__connection-path {
+  stroke: #0ea5e9 !important;
+  stroke-width: 2 !important;
+  stroke-dasharray: 5, 5 !important;
+}
+
+/* Edge Delete Button */
+.edge-delete-button {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.edge-delete-button.visible,
+.react-flow__edge:hover .edge-delete-button {
+  opacity: 1;
+}
+
+.edge-delete-btn {
+  width: 20px;
+  height: 20px;
+  background: #ef4444;
+  border: 2px solid #1f2937;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.edge-delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+}
+
+/* Canvas Panel */
+.canvas-panel {
+  display: flex;
+  gap: 8px;
+}
+
+.clear-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #f87171;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clear-button:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Improved Edge Markers */
+.react-flow__edge-path-selector {
+  stroke-width: 20px;
 }
 
 /* ========================================

@@ -43,28 +43,58 @@ export const BaseNode = ({
 
     return (
         <div className={`base-node base-node--${nodeType} ${selected ? 'selected' : ''}`}>
-            {/* Input Handles */}
+            {/* Input Handles - directly inside the node for React Flow */}
             {inputs.map((input, index) => (
-                <div key={input.id} style={{ position: 'relative' }}>
-                    <Handle
-                        type="target"
-                        position={Position.Left}
-                        id={`${id}-${input.id}`}
+                <Handle
+                    key={`input-${input.id}`}
+                    type="target"
+                    position={Position.Left}
+                    id={`${id}-${input.id}`}
+                    style={{
+                        top: `${input.position || calculatePosition(index, inputs.length)}%`
+                    }}
+                />
+            ))}
+
+            {/* Output Handles - directly inside the node for React Flow */}
+            {outputs.map((output, index) => (
+                <Handle
+                    key={`output-${output.id}`}
+                    type="source"
+                    position={Position.Right}
+                    id={`${id}-${output.id}`}
+                    style={{
+                        top: `${output.position || calculatePosition(index, outputs.length)}%`
+                    }}
+                />
+            ))}
+
+            {/* Handle Labels (separate from Handles for proper positioning) */}
+            {inputs.map((input, index) => (
+                input.label && (
+                    <span
+                        key={`label-input-${input.id}`}
+                        className="handle-label handle-label--left"
                         style={{
                             top: `${input.position || calculatePosition(index, inputs.length)}%`
                         }}
-                    />
-                    {input.label && (
-                        <span
-                            className="handle-label handle-label--left"
-                            style={{
-                                top: `${input.position || calculatePosition(index, inputs.length)}%`
-                            }}
-                        >
-                            {input.label}
-                        </span>
-                    )}
-                </div>
+                    >
+                        {input.label}
+                    </span>
+                )
+            ))}
+            {outputs.map((output, index) => (
+                output.label && (
+                    <span
+                        key={`label-output-${output.id}`}
+                        className="handle-label handle-label--right"
+                        style={{
+                            top: `${output.position || calculatePosition(index, outputs.length)}%`
+                        }}
+                    >
+                        {output.label}
+                    </span>
+                )
             ))}
 
             {/* Header */}
@@ -77,30 +107,6 @@ export const BaseNode = ({
             <div className="base-node__body">
                 {children}
             </div>
-
-            {/* Output Handles */}
-            {outputs.map((output, index) => (
-                <div key={output.id} style={{ position: 'relative' }}>
-                    <Handle
-                        type="source"
-                        position={Position.Right}
-                        id={`${id}-${output.id}`}
-                        style={{
-                            top: `${output.position || calculatePosition(index, outputs.length)}%`
-                        }}
-                    />
-                    {output.label && (
-                        <span
-                            className="handle-label handle-label--right"
-                            style={{
-                                top: `${output.position || calculatePosition(index, outputs.length)}%`
-                            }}
-                        >
-                            {output.label}
-                        </span>
-                    )}
-                </div>
-            ))}
         </div>
     );
 };
