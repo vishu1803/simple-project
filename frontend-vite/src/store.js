@@ -57,14 +57,8 @@ export const useStore = create((set, get) => ({
         ...connection,
         type: 'custom',
         animated: true,
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          width: 20,
-          height: 20,
-          color: '#0ea5e9'
-        },
         style: {
-          stroke: '#0ea5e9',
+          stroke: '#6366f1',
         }
       }, get().edges),
     });

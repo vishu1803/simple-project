@@ -69,33 +69,6 @@ export const BaseNode = ({
                 />
             ))}
 
-            {/* Handle Labels (separate from Handles for proper positioning) */}
-            {inputs.map((input, index) => (
-                input.label && (
-                    <span
-                        key={`label-input-${input.id}`}
-                        className="handle-label handle-label--left"
-                        style={{
-                            top: `${input.position || calculatePosition(index, inputs.length)}%`
-                        }}
-                    >
-                        {input.label}
-                    </span>
-                )
-            ))}
-            {outputs.map((output, index) => (
-                output.label && (
-                    <span
-                        key={`label-output-${output.id}`}
-                        className="handle-label handle-label--right"
-                        style={{
-                            top: `${output.position || calculatePosition(index, outputs.length)}%`
-                        }}
-                    >
-                        {output.label}
-                    </span>
-                )
-            ))}
 
             {/* Header */}
             <div className="base-node__header">

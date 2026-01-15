@@ -39,8 +39,8 @@ export const CustomEdge = ({
                 markerEnd={markerEnd}
                 style={{
                     ...style,
-                    strokeWidth: selected ? 3 : 2,
-                    stroke: selected ? '#60a5fa' : '#0ea5e9',
+                    strokeWidth: selected ? 2 : 1.5,
+                    stroke: selected ? '#818cf8' : '#6366f1',
                 }}
             />
             <EdgeLabelRenderer>

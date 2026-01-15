@@ -156,7 +156,7 @@ export const PipelineUI = () => {
         snapGrid={[gridSize, gridSize]}
         snapToGrid
         connectionLineType="smoothstep"
-        connectionLineStyle={{ stroke: '#0ea5e9', strokeWidth: 2 }}
+        connectionLineStyle={{ stroke: '#6366f1', strokeWidth: 1.5 }}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         deleteKeyCode={['Delete', 'Backspace']}

@@ -25,8 +25,9 @@
 
   /* Handle colors */
   --handle-bg: #ffffff;
-  --handle-border: #374151;
-  --handle-hover: #60a5fa;
+  --handle-border: #6366f1;
+  --handle-hover: #a5b4fc;
+  --handle-glow: rgba(99, 102, 241, 0.4);
 }
 
 /* ========================================
@@ -204,54 +205,42 @@
    Custom Handle Styles
    ======================================== */
 .base-node .react-flow__handle {
-  width: 14px;
-  height: 14px;
-  background: var(--handle-bg);
-  border: 2px solid var(--handle-border);
-  border-radius: 50%;
-  transition: all 0.15s ease;
-  z-index: 10;
-  cursor: crosshair;
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  background: var(--handle-bg) !important;
+  border: 2px solid var(--handle-border) !important;
+  border-radius: 50% !important;
+  z-index: 100 !important;
+  cursor: crosshair !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 .base-node .react-flow__handle:hover {
-  background: var(--handle-hover);
-  border-color: var(--handle-hover);
-  transform: scale(1.3);
-  box-shadow: 0 0 8px var(--handle-hover);
+  background: var(--handle-hover) !important;
+  border-color: var(--handle-border) !important;
+  transform: none !important;
 }
 
 .base-node .react-flow__handle.connecting {
-  background: var(--handle-hover);
+  background: var(--handle-hover) !important;
 }
 
 .base-node .react-flow__handle-left {
-  left: -7px;
+  left: -8px !important;
 }
 
 .base-node .react-flow__handle-right {
-  right: -7px;
+  right: -8px !important;
 }
 
-/* Handle labels */
+/* Disable all handle label styles */
 .handle-label {
-  position: absolute;
-  font-size: 9px;
-  color: var(--node-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.handle-label--left {
-  left: 8px;
-  transform: translateY(-50%);
-}
-
-.handle-label--right {
-  right: 8px;
-  transform: translateY(-50%);
+  display: none !important;
 }
 
 /* ========================================
@@ -309,18 +298,4 @@
 /* ========================================
    Animations
    ======================================== */
-@keyframes nodeEnter {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.base-node {
-  animation: nodeEnter 0.2s ease-out;
-}
+/* Node enter animation removed to prevent handle blinking */
