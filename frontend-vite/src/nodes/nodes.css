@@ -1,4 +1,4 @@
-/* nodes.css - Shared styles for React Flow nodes */
+/* nodes.css - Shared styles for React Flow nodes - LIGHT THEME */
 
 /* ========================================
    CSS Custom Properties (Theme Variables)
@@ -15,19 +15,19 @@
   --node-api-color: #ef4444;
   --node-merge-color: #6366f1;
 
-  /* Base colors */
-  --node-bg: #1e1e2e;
-  --node-bg-secondary: #2a2a3e;
-  --node-border: rgba(255, 255, 255, 0.1);
-  --node-text: #ffffff;
-  --node-text-muted: #a1a1aa;
-  --node-shadow: rgba(0, 0, 0, 0.3);
+  /* Base colors - Light Theme */
+  --node-bg: #ffffff;
+  --node-bg-secondary: #f8fafc;
+  --node-border: #e2e8f0;
+  --node-text: #1e293b;
+  --node-text-muted: #64748b;
+  --node-shadow: rgba(0, 0, 0, 0.08);
 
   /* Handle colors */
   --handle-bg: #ffffff;
   --handle-border: #6366f1;
-  --handle-hover: #a5b4fc;
-  --handle-glow: rgba(99, 102, 241, 0.4);
+  --handle-hover: #818cf8;
+  --handle-glow: rgba(99, 102, 241, 0.3);
 }
 
 /* ========================================
@@ -41,9 +41,44 @@
   box-shadow:
     0 4px 6px -1px var(--node-shadow),
     0 2px 4px -2px var(--node-shadow);
-  overflow: hidden;
+  overflow: visible;
   transition: all 0.2s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+}
+
+/* Node Delete Button */
+.base-node__delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  background: #ef4444;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s ease;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.base-node:hover .base-node__delete {
+  opacity: 1;
+}
+
+.base-node__delete:hover {
+  background: #dc2626;
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 .base-node:hover {
@@ -54,9 +89,10 @@
 }
 
 .base-node.selected {
-  border-color: var(--handle-hover);
+  border-color: var(--handle-border);
   box-shadow:
     0 0 0 2px var(--handle-hover),
+    0 0 20px var(--handle-glow),
     0 10px 15px -3px var(--node-shadow);
 }
 
@@ -68,8 +104,9 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: linear-gradient(135deg, var(--header-color) 0%, color-mix(in srgb, var(--header-color) 80%, black) 100%);
+  background: linear-gradient(135deg, var(--header-color) 0%, color-mix(in srgb, var(--header-color) 85%, black) 100%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 11px 11px 0 0;
 }
 
 .base-node__icon {
@@ -78,7 +115,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 6px;
   font-size: 14px;
 }
@@ -86,7 +123,7 @@
 .base-node__title {
   font-size: 13px;
   font-weight: 600;
-  color: var(--node-text);
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -97,6 +134,7 @@
 .base-node__body {
   padding: 14px;
   background: var(--node-bg-secondary);
+  border-radius: 0 0 11px 11px;
 }
 
 .base-node__field {
@@ -132,8 +170,8 @@
 
 .base-node__input:focus {
   outline: none;
-  border-color: var(--handle-hover);
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  border-color: var(--handle-border);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .base-node__input::placeholder {
@@ -153,7 +191,7 @@
   transition: all 0.15s ease;
   box-sizing: border-box;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 32px;
@@ -161,8 +199,8 @@
 
 .base-node__select:focus {
   outline: none;
-  border-color: var(--handle-hover);
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  border-color: var(--handle-border);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .base-node__select option {
@@ -181,9 +219,7 @@
   font-size: 13px;
   font-family: inherit;
   resize: none;
-  /* Disable manual resize - auto-resize handles this */
   overflow: hidden;
-  /* Hide scrollbar for smoother auto-resize */
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-sizing: border-box;
   line-height: 1.5;
@@ -191,14 +227,15 @@
 
 .base-node__textarea:focus {
   outline: none;
-  border-color: var(--handle-hover);
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  border-color: var(--handle-border);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .base-node__description {
   font-size: 12px;
   color: var(--node-text-muted);
   line-height: 1.4;
+  margin: 8px 0 0 0;
 }
 
 /* ========================================
@@ -214,16 +251,14 @@
   border-radius: 50% !important;
   z-index: 100 !important;
   cursor: crosshair !important;
-  box-shadow: none !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease !important;
-  transform: none !important;
-  animation: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease !important;
 }
 
 .base-node .react-flow__handle:hover {
   background: var(--handle-hover) !important;
   border-color: var(--handle-border) !important;
-  transform: none !important;
+  transform: scale(1.2) !important;
 }
 
 .base-node .react-flow__handle.connecting {
@@ -241,6 +276,61 @@
 /* Disable all handle label styles */
 .handle-label {
   display: none !important;
+}
+
+/* ========================================
+   Handle Wrappers with Tooltips
+   ======================================== */
+.handle-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+  z-index: 100;
+}
+
+.handle-wrapper--left {
+  left: 0;
+  flex-direction: row-reverse;
+}
+
+.handle-wrapper--right {
+  right: 0;
+  flex-direction: row;
+}
+
+.handle-tooltip {
+  position: absolute;
+  padding: 4px 8px;
+  background: var(--node-text);
+  border: 1px solid var(--node-border);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.handle-tooltip--left {
+  right: 100%;
+  margin-right: 12px;
+  transform: translateX(4px);
+}
+
+.handle-tooltip--right {
+  left: 100%;
+  margin-left: 12px;
+  transform: translateX(-4px);
+}
+
+.handle-wrapper:hover .handle-tooltip {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* ========================================

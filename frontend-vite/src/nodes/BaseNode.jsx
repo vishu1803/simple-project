@@ -1,6 +1,7 @@
 // BaseNode.js - Reusable base component for all React Flow nodes
 
 import { Handle, Position } from "@xyflow/react";
+import { useStore } from '../store';
 import './nodes.css';
 
 /**
@@ -34,6 +35,8 @@ export const BaseNode = ({
     children,
     selected = false
 }) => {
+    const deleteNode = useStore((state) => state.deleteNode);
+
     // Calculate handle positions for multiple handles
     const calculatePosition = (index, total) => {
         if (total === 1) return 50;
@@ -41,32 +44,64 @@ export const BaseNode = ({
         return spacing * (index + 1);
     };
 
+    const handleDeleteClick = (e) => {
+        e.stopPropagation();
+        deleteNode(id);
+    };
+
     return (
         <div className={`base-node base-node--${nodeType} ${selected ? 'selected' : ''}`}>
-            {/* Input Handles - directly inside the node for React Flow */}
+            {/* Delete Button */}
+            <button
+                className="base-node__delete"
+                onClick={handleDeleteClick}
+                title="Delete node"
+            >
+                ×
+            </button>
+
+            {/* Input Handles - with tooltips */}
             {inputs.map((input, index) => (
-                <Handle
-                    key={`input-${input.id}`}
-                    type="target"
-                    position={Position.Left}
-                    id={`${id}-${input.id}`}
+                <div
+                    key={`input-wrapper-${input.id}`}
+                    className="handle-wrapper handle-wrapper--left"
                     style={{
                         top: `${input.position || calculatePosition(index, inputs.length)}%`
                     }}
-                />
+                >
+                    <Handle
+                        key={`input-${input.id}`}
+                        type="target"
+                        position={Position.Left}
+                        id={`${id}-${input.id}`}
+                        className="handle-with-tooltip"
+                    />
+                    {input.label && (
+                        <span className="handle-tooltip handle-tooltip--left">{input.label}</span>
+                    )}
+                </div>
             ))}
 
-            {/* Output Handles - directly inside the node for React Flow */}
+            {/* Output Handles - with tooltips */}
             {outputs.map((output, index) => (
-                <Handle
-                    key={`output-${output.id}`}
-                    type="source"
-                    position={Position.Right}
-                    id={`${id}-${output.id}`}
+                <div
+                    key={`output-wrapper-${output.id}`}
+                    className="handle-wrapper handle-wrapper--right"
                     style={{
                         top: `${output.position || calculatePosition(index, outputs.length)}%`
                     }}
-                />
+                >
+                    <Handle
+                        key={`output-${output.id}`}
+                        type="source"
+                        position={Position.Right}
+                        id={`${id}-${output.id}`}
+                        className="handle-with-tooltip"
+                    />
+                    {output.label && (
+                        <span className="handle-tooltip handle-tooltip--right">{output.label}</span>
+                    )}
+                </div>
             ))}
 
 

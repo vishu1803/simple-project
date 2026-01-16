@@ -50,6 +50,8 @@ const selector = (state) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   clearAll: state.clearAll,
+  undo: state.undo,
+  redo: state.redo,
 });
 
 // Custom minimap node colors
@@ -68,9 +70,36 @@ const nodeColor = (node) => {
   return colors[node.type] || '#6b7280';
 };
 
+// Confirmation Modal Component
+const ConfirmModal = ({ isOpen, onConfirm, onCancel, title, message }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal confirm-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal__content">
+          <div className="modal__icon">⚠️</div>
+          <h2 className="modal__title">{title}</h2>
+          <p className="modal__message">{message}</p>
+          <div className="confirm-modal__buttons">
+            <button className="confirm-modal__btn confirm-modal__btn--cancel" onClick={onCancel}>
+              Cancel
+            </button>
+            <button className="confirm-modal__btn confirm-modal__btn--confirm" onClick={onConfirm}>
+              Clear All
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const PipelineUI = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
   const {
     nodes,
     edges,
@@ -81,6 +110,8 @@ export const PipelineUI = () => {
     onEdgesChange,
     onConnect,
     clearAll,
+    undo,
+    redo,
   } = useStore(useShallow(selector));
 
   const getInitNodeData = (nodeID, type) => {
@@ -128,70 +159,114 @@ export const PipelineUI = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  // Handle keyboard delete
+  // Handle keyboard shortcuts - only when not in an input field
   const onKeyDown = useCallback((event) => {
-    if (event.key === 'Delete' || event.key === 'Backspace') {
-      const selectedNodes = nodes.filter(n => n.selected);
-      selectedNodes.forEach(node => deleteNode(node.id));
+    // Don't handle keyboard shortcuts when typing in input fields
+    const target = event.target;
+    const isInputField = target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.tagName === 'SELECT' ||
+      target.isContentEditable;
+
+    if (isInputField) {
+      return; // Let the input field handle the key event
     }
-  }, [nodes, deleteNode]);
+
+    // Undo: Ctrl+Z / Cmd+Z
+    if ((event.ctrlKey || event.metaKey) && event.key === 'z' && !event.shiftKey) {
+      event.preventDefault();
+      undo();
+    }
+
+    // Redo: Ctrl+Shift+Z / Cmd+Shift+Z or Ctrl+Y
+    if ((event.ctrlKey || event.metaKey) && (event.key === 'y' || (event.key === 'z' && event.shiftKey))) {
+      event.preventDefault();
+      redo();
+    }
+  }, [undo, redo]);
+
+  const handleClearClick = () => {
+    if (nodes.length > 0 || edges.length > 0) {
+      setShowClearConfirm(true);
+    }
+  };
+
+  const handleConfirmClear = () => {
+    clearAll();
+    setShowClearConfirm(false);
+  };
+
+  const handleCancelClear = () => {
+    setShowClearConfirm(false);
+  };
 
   const memoNodes = useMemo(() => nodes, [nodes]);
   const memoEdges = useMemo(() => edges, [edges]);
 
   return (
-    <div ref={reactFlowWrapper} className="canvas-wrapper" onKeyDown={onKeyDown} tabIndex={0}>
-      <ReactFlow
-        nodes={memoNodes}
-        edges={memoEdges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onInit={setReactFlowInstance}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        proOptions={proOptions}
-        snapGrid={[gridSize, gridSize]}
-        snapToGrid
-        connectionLineType="smoothstep"
-        connectionLineStyle={{ stroke: '#6366f1', strokeWidth: 1.5 }}
-        fitView
-        fitViewOptions={{ padding: 0.2 }}
-        deleteKeyCode={['Delete', 'Backspace']}
-        defaultEdgeOptions={{
-          type: 'custom',
-          animated: true,
-        }}
-      >
-        <Background
-          variant="dots"
-          gap={gridSize}
-          size={1}
-          color="rgba(255, 255, 255, 0.05)"
-        />
-        <Controls showInteractive={false} />
-        <MiniMap
-          nodeColor={nodeColor}
-          nodeStrokeWidth={3}
-          zoomable
-          pannable
-        />
+    <>
+      <div ref={reactFlowWrapper} className="canvas-wrapper" onKeyDown={onKeyDown} tabIndex={0}>
+        <ReactFlow
+          nodes={memoNodes}
+          edges={memoEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onInit={setReactFlowInstance}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          proOptions={proOptions}
+          snapGrid={[gridSize, gridSize]}
+          snapToGrid
+          connectionLineType="smoothstep"
+          connectionLineStyle={{ stroke: '#6366f1', strokeWidth: 1.5 }}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          deleteKeyCode={null}
+          defaultEdgeOptions={{
+            type: 'custom',
+            animated: true,
+          }}
+        >
+          <Background
+            variant="dots"
+            gap={gridSize}
+            size={1}
+            color="rgba(0, 0, 0, 0.08)"
+          />
+          <Controls showInteractive={false} />
+          <MiniMap
+            nodeColor={nodeColor}
+            nodeStrokeWidth={3}
+            zoomable
+            pannable
+          />
 
-        {/* Clear All Panel */}
-        {(nodes.length > 0 || edges.length > 0) && (
-          <Panel position="top-right" className="canvas-panel">
-            <button
-              className="clear-button"
-              onClick={clearAll}
-              title="Clear all nodes and connections"
-            >
-              🗑️ Clear All
-            </button>
-          </Panel>
-        )}
-      </ReactFlow>
-    </div>
+          {/* Top Right Panel with Clear All only */}
+          {(nodes.length > 0 || edges.length > 0) && (
+            <Panel position="top-right" className="canvas-panel">
+              <button
+                className="clear-button"
+                onClick={handleClearClick}
+                title="Clear all nodes and connections"
+              >
+                🗑️ Clear All
+              </button>
+            </Panel>
+          )}
+        </ReactFlow>
+      </div>
+
+      {/* Clear Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showClearConfirm}
+        onConfirm={handleConfirmClear}
+        onCancel={handleCancelClear}
+        title="Clear All?"
+        message="This will remove all nodes and connections from the canvas. This action can be undone with Ctrl+Z."
+      />
+    </>
   );
 };

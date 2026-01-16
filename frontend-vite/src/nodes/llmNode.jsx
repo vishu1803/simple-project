@@ -1,16 +1,35 @@
 // llmNode.js
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { BaseNode } from './BaseNode';
 import { useStore } from '../store';
 
 export const LLMNode = ({ id, data, selected }) => {
   const [model, setModel] = useState(data?.model || 'gpt-4');
+  const [systemPrompt, setSystemPrompt] = useState(data?.systemPrompt || '');
   const updateNodeField = useStore((state) => state.updateNodeField);
+  const textareaRef = useRef(null);
+
+  // Auto-resize textarea
+  const resizeTextarea = useCallback(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    resizeTextarea();
+  }, [systemPrompt, resizeTextarea]);
 
   const handleModelChange = (e) => {
     setModel(e.target.value);
     updateNodeField(id, 'model', e.target.value);
+  };
+
+  const handleSystemPromptChange = (e) => {
+    setSystemPrompt(e.target.value);
+    updateNodeField(id, 'systemPrompt', e.target.value);
   };
 
   return (
@@ -20,8 +39,7 @@ export const LLMNode = ({ id, data, selected }) => {
       nodeType="llm"
       icon="🤖"
       inputs={[
-        { id: 'system', label: 'System', position: 33 },
-        { id: 'prompt', label: 'Prompt', position: 66 }
+        { id: 'prompt', label: 'Prompt' }
       ]}
       outputs={[{ id: 'response', label: 'Response' }]}
       selected={selected}
@@ -39,9 +57,17 @@ export const LLMNode = ({ id, data, selected }) => {
           <option value="gemini-pro">Gemini Pro</option>
         </select>
       </div>
-      <p className="base-node__description">
-        Processes system prompt and user input to generate AI responses.
-      </p>
+      <div className="base-node__field">
+        <label className="base-node__label">System Instructions</label>
+        <textarea
+          ref={textareaRef}
+          className="base-node__textarea"
+          value={systemPrompt}
+          onChange={handleSystemPromptChange}
+          placeholder="Enter instructions for the AI model..."
+          rows={2}
+        />
+      </div>
     </BaseNode>
   );
 };
