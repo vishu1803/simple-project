@@ -1,16 +1,126 @@
-# React + Vite
+# Pipeline Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A visual drag-and-drop pipeline builder built with React Flow, featuring a clean light theme and FastAPI backend for DAG validation.
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-18-blue)
+![Vite](https://img.shields.io/badge/Vite-5-purple)
+![React Flow](https://img.shields.io/badge/React%20Flow-12-green)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **9 Node Types** - Input, Output, LLM, Text, Filter, Transform, Conditional, API, Merge
+- **Dynamic Variable Detection** - Text nodes parse `{{variable}}` patterns
+- **Visual Pipeline Building** - Drag-and-drop interface with connections
+- **DAG Validation** - Backend validates pipeline structure
+- **Undo/Redo** - Full history support (Ctrl+Z / Ctrl+Y)
+- **Light Theme** - Clean, professional aesthetic
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quick Start
 
-## Expanding the ESLint configuration
+### Frontend
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+cd frontend-vite
+npm install
+npm run dev
+```
+
+### Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+Open http://localhost:5173 in your browser.
+
+## Node Types
+
+| Node | Description |
+|------|-------------|
+| **Input** | Entry point for data |
+| **Output** | Data output destination |
+| **LLM** | AI model with system instructions |
+| **Text** | Template with `{{variable}}` support |
+| **Filter** | Conditional filtering |
+| **Transform** | Data transformation |
+| **Conditional** | If/else branching |
+| **API** | HTTP requests |
+| **Merge** | Combine multiple inputs |
+
+## Text Node Variables
+
+Type `{{variableName}}` to create dynamic input handles:
+
+```
+Hello {{name}}, welcome to {{company}}!
+```
+
+This creates two input handles: `name` and `company`.
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Z` | Undo |
+| `Ctrl+Y` | Redo |
+| `Delete` | Remove selected |
+
+## Project Structure
+
+```
+frontend-vite/
+├── src/
+│   ├── App.jsx           # Main app layout
+│   ├── ui.jsx            # React Flow canvas
+│   ├── toolbar.jsx       # Node library
+│   ├── submit.jsx        # Pipeline submission
+│   ├── store.js          # Zustand state
+│   ├── CustomEdge.jsx    # Edge with delete
+│   ├── nodes/
+│   │   ├── BaseNode.jsx  # Base component
+│   │   ├── inputNode.jsx
+│   │   ├── outputNode.jsx
+│   │   ├── llmNode.jsx
+│   │   ├── textNode.jsx
+│   │   └── ...
+│   ├── index.css         # Global styles
+│   └── nodes/nodes.css   # Node styles
+backend/
+├── main.py               # FastAPI server
+└── requirements.txt
+```
+
+## API
+
+### POST /pipelines/parse
+
+Validates pipeline structure.
+
+**Request:**
+```json
+{
+  "nodes": [{"id": "node-1", "type": "input"}],
+  "edges": [{"source": "node-1", "target": "node-2"}]
+}
+```
+
+**Response:**
+```json
+{
+  "num_nodes": 2,
+  "num_edges": 1,
+  "is_dag": true
+}
+```
+
+## Tech Stack
+
+- **Frontend**: React 18, Vite, React Flow, Zustand
+- **Backend**: FastAPI, Python 3.8+
+- **Styling**: CSS with custom properties
+
+## License
+
+MIT
