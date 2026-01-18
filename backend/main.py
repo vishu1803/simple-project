@@ -47,16 +47,7 @@ class PipelineResponse(BaseModel):
 
 
 def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
-    """
-    Determines if the graph is a Directed Acyclic Graph (DAG).
-    Uses Kahn's algorithm for topological sorting.
-    
-    A graph is a DAG if:
-    1. It's directed (edges have source and target)
-    2. It has no cycles
-    
-    Returns True if the graph is a DAG, False otherwise.
-    """
+   
     if not nodes:
         return True  # Empty graph is considered a DAG
     
@@ -97,27 +88,8 @@ def read_root():
 
 @app.post('/pipelines/parse', response_model=PipelineResponse)
 def parse_pipeline(pipeline: PipelineRequest):
-    """
-    Analyze a pipeline graph.
     
-    Accepts nodes and edges of a pipeline graph and returns:
-    - num_nodes: Total number of nodes
-    - num_edges: Total number of edges
-    - is_dag: Whether the graph is a Directed Acyclic Graph
-    
-    Example request body:
-    ```json
-    {
-        "nodes": [
-            {"id": "node-1", "type": "input"},
-            {"id": "node-2", "type": "output"}
-        ],
-        "edges": [
-            {"source": "node-1", "target": "node-2"}
-        ]
-    }
-    ```
-    """
+
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)
     dag_status = is_dag(pipeline.nodes, pipeline.edges)
