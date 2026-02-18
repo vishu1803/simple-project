@@ -121,6 +121,3 @@ Validates pipeline structure.
 - **Backend**: FastAPI, Python 3.8+
 - **Styling**: CSS with custom properties
 
-## License
-
-MIT
