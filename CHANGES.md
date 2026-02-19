@@ -126,9 +126,7 @@ Added × button that appears when hovering over connection lines.
 ### What Changed
 Implemented full undo/redo with history stack.
 
-### Keyboard Shortcuts
-- `Ctrl+Z` - Undo
-- `Ctrl+Y` or `Ctrl+Shift+Z` - Redo
+
 
 ### How It Works
 ```javascript
