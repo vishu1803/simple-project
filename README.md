@@ -3,7 +3,6 @@ A visual drag-and-drop pipeline builder for creating data processing workflows.
 ## Overview
 
 Build pipelines by connecting nodes visually. The backend validates the pipeline structure using DAG (Directed Acyclic Graph) validation.
-
 ## Getting Started
 
 ### Frontend
