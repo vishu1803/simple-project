@@ -11,7 +11,6 @@ cd frontend-vite
 npm install
 npm run dev
 ```
-
 ### Backend
 ```bash
 cd backend
