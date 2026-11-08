@@ -21,7 +21,6 @@ uvicorn main:app --reload
 Open http://localhost:5173
 
 ## Documentation
-
 - [Frontend Documentation](frontend-vite/README.md)
 - [Backend Documentation](backend/README.md)
 - [Change Log](CHANGES.md)
