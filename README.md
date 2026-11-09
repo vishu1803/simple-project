@@ -17,7 +17,6 @@ cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
-
 Open http://localhost:5173
 
 ## Documentation
